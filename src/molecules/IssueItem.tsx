@@ -73,14 +73,14 @@ const StyledUserLink = styled.a`
   flex-shrink: 0;
 `;
 
-const StyledUserIcon = styled.p`
+export const StyledUserIcon = styled.p`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
 `;
 
-const StyledUserIconImage = styled.img`
+export const StyledUserIconImage = styled.img`
   width: 100%;
 `;
 

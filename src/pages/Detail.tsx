@@ -4,6 +4,12 @@ import styled from 'styled-components';
 import { marked } from 'marked';
 import { togglePage } from '../redux/modules/currentPage';
 import { selectDetail } from '../redux/modules/detail';
+import { StyledUserIcon, StyledUserIconImage } from '../molecules/IssueItem';
+
+export const rawMarkup = (markup: string) => {
+  const rawMarkup = marked(markup);
+  return { __html: rawMarkup };
+};
 
 export const Detail: FC = () => {
   const selector = useSelector(selectDetail);
@@ -11,27 +17,31 @@ export const Detail: FC = () => {
 
   return (
     <StyledDetailContainer>
-      <h1>{selector.title}</h1>
-      <button
+      <StyledHeading>{selector.title}</StyledHeading>
+      <StyledLink
         onClick={() => {
           dispatch(togglePage('index'));
         }}
       >
         Back to Issues List
-      </button>
-      <div>
+      </StyledLink>
+      <StyledFlex>
         <p>#{selector.number}</p>
-        <p>{selector.state}</p>
+        <StyledState>{selector.state}</StyledState>
         <div>
-          <p>{selector.user.avatar_url}</p>
-          <p>{selector.user.login}</p>
+          <StyledUserIcon>
+            <StyledUserIconImage src={selector.user.avatar_url} alt="" />
+          </StyledUserIcon>
+          <div>{selector.user.login}</div>
         </div>
-      </div>
-      {selector.labels.map(({ name }) => (
-        <li>{name}</li>
-      ))}
+      </StyledFlex>
+      <StyledStatus>
+        {selector.labels.map(({ name }) => (
+          <li>{name}</li>
+        ))}
+      </StyledStatus>
       <hr />
-      <div>{marked(selector.body)}</div>
+      <StyledBody dangerouslySetInnerHTML={rawMarkup(selector.body)} />
       <hr />
       <p></p>
     </StyledDetailContainer>
@@ -40,5 +50,47 @@ export const Detail: FC = () => {
 
 const StyledDetailContainer = styled.div`
   max-width: 1000px;
+  padding: 40px 0;
   margin: 0 auto;
+`;
+
+const StyledHeading = styled.h1`
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const StyledFlex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
+
+const StyledLink = styled.button`
+  margin-bottom: 20px;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const StyledStatus = styled.ul`
+  margin-bottom: 20px;
+`;
+
+const StyledBody = styled.div`
+  padding: 20px;
+
+  * {
+    max-width: 100%;
+  }
+`;
+
+const StyledState = styled.div`
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 60px;
 `;
